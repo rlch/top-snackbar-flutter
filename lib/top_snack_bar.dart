@@ -55,6 +55,8 @@ void showTopSnackBar(
 class TopSnackBar extends StatefulWidget {
   final Widget child;
   final VoidCallback onDismissed;
+  final Curve curve;
+  final Curve reverseCurve;
   final showOutAnimationDuration;
   final hideOutAnimationDuration;
   final displayDuration;
@@ -69,6 +71,8 @@ class TopSnackBar extends StatefulWidget {
     required this.hideOutAnimationDuration,
     required this.displayDuration,
     required this.additionalTopPadding,
+    this.curve = Curves.elasticOut,
+    this.reverseCurve = Curves.linearToEaseOut,
     this.onTap,
   }) : super(key: key);
 
@@ -104,8 +108,8 @@ class _TopSnackBarState extends State<TopSnackBar>
     offsetAnimation = offsetTween.animate(
       CurvedAnimation(
         parent: animationController,
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.linearToEaseOut,
+        curve: widget.curve,
+        reverseCurve: widget.reverseCurve,
       ),
     )..addStatusListener((status) async {
         if (status == AnimationStatus.completed) {
@@ -130,7 +134,7 @@ class _TopSnackBarState extends State<TopSnackBar>
   Widget build(BuildContext context) {
     return AnimatedPositioned(
       duration: widget.hideOutAnimationDuration * 1.5,
-      curve: Curves.linearToEaseOut,
+      curve: widget.reverseCurve,
       top: topPosition,
       left: 16,
       right: 16,
